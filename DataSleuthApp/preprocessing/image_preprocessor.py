@@ -26,8 +26,8 @@ def preprocess_image(file_path, agent_id):
         position = (width - text_width - 10, height - text_height - 10)
 
         # Add the watermark text
-        # draw.text(position, watermark, fill=(0, 0, 0), font=font)  # Black color for better visibility
-        draw.text(position, watermark, fill=(255, 255, 255), font=font)  # White color for better invisibility
+        draw.text(position, watermark, fill=(0, 0, 0), font=font)  # Black color for better visibility
+        # draw.text(position, watermark, fill=(255, 255, 255), font=font)  # White color for better invisibility
 
         # Generate output file name (keep the same file extension)
         output_file = f"{os.path.splitext(file_path)[0]}_{agent_id}{os.path.splitext(file_path)[1]}"

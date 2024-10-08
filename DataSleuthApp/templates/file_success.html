@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Uploaded</title>
+    <title>Files Processed Successfully</title>
 </head>
 <body>
-    <h1>File Uploaded Successfully!</h1>
-    <p>Your file has been successfully uploaded and processed.</p>
+    <h1>Files Processed Successfully!</h1>
+    <p>Your file has been processed for the following agents:</p>
+
+    <!-- List the agents and their corresponding processed files -->
+    <ul>
+        {% for agent, processed_file in processed_files %}
+            <li>
+                Agent: {{ agent.name }} - Processed File: <a href="{{ processed_file.url }}">{{ processed_file.file_name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <p>Thank you for using DataSleuth!</p>
 </body>
 </html>

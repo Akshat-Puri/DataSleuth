@@ -4,33 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload File</title>
+
+    <!-- Load the static tag -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'javaScript/upload.js' %}"></script>
 </head>
 <body>
+<form id="uploadForm" method="POST" action="{% url 'upload_file' %}" enctype="multipart/form-data" onsubmit="collectSelectedAgents()">
+
+    <!-- CSRF token -->
+    {% csrf_token %}
     <h1>Upload File</h1>
 
-    <!-- Display error message if there's an error -->
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+    <!-- Radio buttons for selecting mode -->
+    <label>
+        <input type="radio" name="agentSelection" id="singleAgent" onclick="toggleAgentSelection()" checked>
+        Single Agent
+    </label>
+    <label>
+        <input type="radio" name="agentSelection" id="multipleAgent" onclick="toggleAgentSelection()">
+        Multiple Agents
+    </label>
 
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="agent_id">Select Agent:</label>
-        <select id="agent_id" name="agent_id" required>
-            <option value="">--Select an Agent--</option>
-            {% for agent in agents %}
-                <option value="{{ agent.id }}">{{ agent.name }}</option>
-            {% endfor %}
-        </select>
+    <!-- Single agent dropdown (default) -->
+    <div id="singleAgentDropdown">
+        <label for="singleAgent">Select Agent:</label>
+        <div class="dropdown-container">
+            <input type="text" id="searchSingle" placeholder="Search agents..." onkeyup="filterAgents('single')" onfocus="handleSearchFocus('single')">
+            <div class="dropdown-header" onclick="toggleDropdown('singleAgentOptions')">
+                <span id="selectedSingleAgent">--Select an Agent--</span>
+            </div>
+            <div id="singleAgentOptions" class="agent-checkbox-dropdown">
+                {% for agent in agents %}
+                    <label class="single-agent" for="singleAgent{{ agent.id }}">{{ agent.name }}
+                        <input type="radio" name="singleAgent" id="singleAgent{{ agent.id }}" value="{{ agent.id }}">
+                    </label>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-        <br><br>
+    <!-- Multiple agents selection (hidden by default) -->
+    <div id="multipleAgentDropdown" style="display: none;">
+        <label>
+            <input type="checkbox" id="selectAllAgents" onclick="toggleSelectAll(this.checked)"> Select All Agents
+        </label>
+        <span>or</span>
+        <input type="text" id="searchMultiple" placeholder="Search agents..." onkeyup="filterAgents('multiple')" onfocus="handleSearchFocus('multiple')">
+        <div class="dropdown-container">
+            <div class="dropdown-header" onclick="toggleDropdown('multipleAgentOptions')">
+                Select Agents
+            </div>
+            <div id="multipleAgentOptions" class="agent-checkbox-dropdown">
+                {% for agent in agents %}
+                    <label class="multiple-agent"><input type="checkbox" class="agent-checkbox" id="multipleAgent{{ agent.id }}" value="{{ agent.id }}" onclick="updateSelectedCount()"> {{ agent.name }}</label>
+                {% endfor %}
+            </div>
+        </div>
+        <p id="selectedCount">0 agent(s) selected</p>
+    </div>
 
-        <label for="file">Choose file to upload:</label>
-        <input type="file" id="file" name="file" required>
+    <br>
 
-        <br><br>
+    <!-- Hidden input to store selected agent IDs -->
+    <input type="hidden" id="agent_ids" name="agent_ids">
 
-        <input type="submit" value="Upload File">
-    </form>
+    <!-- File upload input -->
+    <label for="file">Choose file to upload:</label>
+    <input type="file" id="file" name="file" required>
+
+    <br><br>
+
+    <input type="submit" value="Upload File">
+</form>
 </body>
 </html>
