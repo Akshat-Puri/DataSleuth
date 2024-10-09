@@ -1,10 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/log_list.css' %}">
 </head>
 <body>
-$END$
+    <h1>Activity Logs</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Agent</th>
+                <th>User</th>
+                <th>Description</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td data-label="Action">{{ log.get_action_display }}</td>
+                <td data-label="Agent">
+                    {% if log.agent %}
+                        {{ log.agent.name }}
+                    {% else %}
+                        No Agent
+                    {% endif %}
+                </td>
+                <td data-label="User">
+                    {% if log.user %}
+                        {{ log.user.username }}
+                    {% else %}
+                        Anonymous
+                    {% endif %}
+                </td>
+                <td data-label="Description">{{ log.description }}</td>
+                <td data-label="Timestamp">{{ log.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
