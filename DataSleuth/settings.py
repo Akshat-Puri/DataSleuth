@@ -22,10 +22,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-l(+5y!%ndvxg14y_x+n%qif7f^(_ns3l6xevn-r7o-4g+&o-z6'
 
+# Configure SECURE_SSL_REDIRECT and SECURE_HSTS_SECONDS for HTTPS in production
+SECURE_SSL_REDIRECT = False  # True Redirect HTTP to HTTPS
+# SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for a year
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to subdomains
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+'''DEBUG = False  # Disable debugging in production'''
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []  # Allow all hosts (development)
+'''ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # Add production domain here'''
+
+# Session expiry
+SESSION_COOKIE_AGE = 60 * 30  # 30 minutes session expiry
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Sessions will expire when the browser is closed
 
 
 # Application definition
@@ -70,6 +81,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DataSleuth.wsgi.application'
 
+'''# Optional: CSRF custom failure view (if required)
+CSRF_FAILURE_VIEW = 'DataSleuthApp.views.csrf_failure'
+'''
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -100,7 +114,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redirect URLs after login/logout
 LOGIN_URL = '/login/'  # Set to match login URL
+LOGIN_REDIRECT_URL = 'log_list'  # Redirect after login
+LOGOUT_REDIRECT_URL = 'home'  # Redirect after logout
 
 # Authentication for logging
 AUTHENTICATION_BACKENDS = [
@@ -144,6 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'  # Production deployment
 
 STATICFILES_DIRS = [
     BASE_DIR / "DataSleuthApp" / "static",  # Points to the static directory inside your app
