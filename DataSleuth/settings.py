@@ -34,10 +34,13 @@ DEBUG = True
 ALLOWED_HOSTS = []  # Allow all hosts (development)
 '''ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # Add production domain here'''
 
-# Session expiry
-SESSION_COOKIE_AGE = 60 * 30  # 30 minutes session expiry
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Sessions will expire when the browser is closed
 
+# Use file-based session storage
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
+# Invalidate session on server restart
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Ensures session expires after browser is closed
+# Optionally, set a short session timeout (in seconds):
+SESSION_COOKIE_AGE = 300  # 5 minutes session timeout
 
 # Application definition
 
@@ -116,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Redirect URLs after login/logout
 LOGIN_URL = '/login/'  # Set to match login URL
-LOGIN_REDIRECT_URL = 'log_list'  # Redirect after login
+LOGIN_REDIRECT_URL = 'logging'  # Redirect after login
 LOGOUT_REDIRECT_URL = 'home'  # Redirect after logout
 
 # Authentication for logging

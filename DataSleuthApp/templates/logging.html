@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Logs</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/logging.css' %}">
+</head>
+<body>
+    <h1>Activity Logs</h1>
+
+    <!-- Buttons to Delete Logs and Logout -->
+    <div class="buttons-container">
+        <button id="delete-logs">Delete Logs</button>
+        <!-- Logout Form -->
+        <form id="logout-form" action="{% url 'custom_logout' %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" id="logout">Logout</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Agent</th>
+                <th>User</th>
+                <th>Description</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                <td data-label="Action">{{ log.get_action_display }}</td>
+                <td data-label="Agent">
+                    {% if log.agent %}
+                        {{ log.agent.name }}
+                    {% else %}
+                        No Agent
+                    {% endif %}
+                </td>
+                <td data-label="User">
+                    {% if log.user %}
+                        {{ log.user.username }}
+                    {% else %}
+                        Anonymous
+                    {% endif %}
+                </td>
+                <td data-label="Description">{{ log.description }}</td>
+                <td data-label="Timestamp">{{ log.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal for Password Input -->
+    <div id="password-modal">
+        <div class="modal-content">
+            <label for="password-input">Please enter the superuser password to delete logs:</label>
+            <input type="password" id="password-input" />
+            <button id="confirm-delete">Confirm</button>
+            <button id="cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for handling Delete and Logout Actions -->
+    <script src="{% static 'javaScript/logging.js' %}"></script>
+
+</body>
+</html>

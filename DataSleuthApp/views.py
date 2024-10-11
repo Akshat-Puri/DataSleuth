@@ -21,6 +21,7 @@ def home(request):
 
 
 # View for file upload
+@login_required  # Use the login_required decorator to restrict the upload of file.
 def upload_file(request):
     if request.method == 'POST':
 
@@ -97,10 +98,10 @@ def upload_file(request):
     return render(request, 'upload.html', {'agents': agents})
 
 
-@login_required  # Use the login_required decorator to restrict access to the log list
-def log_list(request):
+def logging(request):
+    # Logic to show logs
     logs = Log.objects.all().order_by('-timestamp')
-    return render(request, 'log_list.html', {'logs': logs})
+    return render(request, 'logging.html', {'logs': logs})
 
 
 # View to delete logs
@@ -142,7 +143,7 @@ def custom_login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect('log_list')  # Redirect to logs page
+            return redirect('upload_file')  # Redirect to logs page
         else:
             return render(request, 'login.html', {'error': 'Invalid credentials.'})
 
@@ -203,7 +204,7 @@ Issues and Improvements:
     Consider centralizing file type handling into a utility function to make it easier to add new file types in the future.
 
 5) Login and Logout Views: -- Done (can be done before production, not necessary on development but can be tested)
-    The login_required decorator for log_list is a good addition.
+    The login_required decorator for logging is a good addition.
     The custom login and logout views seem fine. However, for security purposes, make sure to limit login attempts to 
     prevent brute-force attacks (you could integrate something like django-axes). 
 
